@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>آزمون MySQL · ۱۰ سوال</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Vazirmatn', system-ui, -apple-system, 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #1e2b3c 0%, #0f1a26 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            font-weight: 400;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 700px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 40px;
+            padding: 24px 20px 32px;
+            box-shadow: 0 25px 40px -10px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s;
+        }
+
+        h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            text-align: center;
+            color: #eef5ff;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .subhead {
+            text-align: center;
+            color: #9ab3cf;
+            font-size: 0.95rem;
+            margin-bottom: 28px;
+            font-weight: 400;
+        }
+
+        /* ---- student info card ---- */
+        .student-card {
+            background: rgba(20, 30, 45, 0.7);
+            border-radius: 32px;
+            padding: 20px 18px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .student-card .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .student-card .row:last-child {
+            margin-bottom: 0;
+        }
+
+        .student-card .field {
+            flex: 1 1 140px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .student-card label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #7f9ab8;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .student-card input {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 60px;
+            padding: 12px 16px;
+            font-size: 1rem;
+            color: #ffffff;
+            outline: none;
+            transition: 0.2s;
+            width: 100%;
+        }
+
+        .student-card input:focus {
+            border-color: #4f9cf7;
+            background: rgba(79, 156, 247, 0.1);
+            box-shadow: 0 0 0 3px rgba(79, 156, 247, 0.2);
+        }
+
+        .student-card input::placeholder {
+            color: #6b7f94;
+            font-weight: 300;
+        }
+
+        /* ---- info bar (timer) ---- */
+        .info-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 0 6px;
+            color: #dfe9f3;
+        }
+
+        .timer-box {
+            background: #182634;
+            padding: 10px 22px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1.4rem;
+            letter-spacing: 1px;
+            color: #aad0ff;
+            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.5);
+            border: 1px solid #2a3e54;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .progress-text {
+            background: #1e2f3f;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #b6cee8;
+        }
+
+        /* ---- question area ---- */
+        .question-box {
+            background: rgba(15, 25, 35, 0.8);
+            border-radius: 32px;
+            padding: 24px 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 15px 25px -10px black;
+        }
+
+        .question-text {
+            font-size: 1.35rem;
+            font-weight: 500;
+            color: #f0f7ff;
+            line-height: 1.6;
+            margin-bottom: 22px;
+            word-break: break-word;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            background: #1e2f40;
+            border: 1.5px solid #2d4258;
+            border-radius: 60px;
+            padding: 14px 20px;
+            cursor: pointer;
+            transition: all 0.15s;
+            color: #e4efff;
+            font-size: 1.05rem;
+            font-weight: 450;
+            word-break: break-word;
+            user-select: none;
+        }
+
+        .option:hover {
+            background: #263b50;
+            border-color: #4f8bc9;
+        }
+
+        .option.selected {
+            background: #1d4b7a;
+            border-color: #6bb0ff;
+            box-shadow: 0 0 0 3px rgba(107, 176, 255, 0.25);
+        }
+
+        .option input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #5e7d9c;
+            border-radius: 50%;
+            margin-left: 16px;
+            flex-shrink: 0;
+            transition: 0.1s;
+            position: relative;
+        }
+
+        .option input[type="radio"]:checked {
+            border-color: #7bb9ff;
+            background: #7bb9ff;
+            box-shadow: inset 0 0 0 4px #1e2f40;
+        }
+
+        .option label {
+            flex: 1;
+            cursor: pointer;
+            padding: 4px 0;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-top: 16px;
+            margin-bottom: 8px;
+        }
+
+        .btn {
+            background: #273e54;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #d9ecff;
+            cursor: pointer;
+            transition: all 0.15s;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            flex: 1;
+            letter-spacing: 0.3px;
+        }
+
+        .btn:hover:not(:disabled) {
+            background: #31516e;
+            transform: scale(0.98);
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-primary {
+            background: #2266b0;
+            color: white;
+            box-shadow: 0 6px 12px #0d2c4b;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #2e7ac9;
+        }
+
+        .btn-success {
+            background: #1f7a4b;
+            color: white;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            background: #2a9b60;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ---- result card ---- */
+        .result-card {
+            background: linear-gradient(145deg, #1c2e40, #10212e);
+            border-radius: 40px;
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: 0 25px 35px -10px black;
+            border: 1px solid #2d4b66;
+        }
+
+        .result-card h2 {
+            color: #b8d6ff;
+            font-size: 1.8rem;
+            margin-bottom: 18px;
+            letter-spacing: -0.5px;
+            font-weight: 500;
+        }
+
+        .result-mark {
+            font-size: 5rem;
+            font-weight: 800;
+            color: #6fb1ff;
+            text-shadow: 0 0 20px rgba(111, 177, 255, 0.5);
+            line-height: 1;
+            margin-bottom: 10px;
+            letter-spacing: -2px;
+        }
+
+        .result-mark small {
+            font-size: 1.8rem;
+            font-weight: 400;
+            color: #9bb9da;
+        }
+
+        .student-detail {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 30px;
+            padding: 18px;
+            margin: 18px 0 22px;
+            text-align: right;
+            border-right: 6px solid #3e7ab3;
+        }
+
+        .student-detail p {
+            color: #d1e4fa;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .student-detail p strong {
+            color: #9fbcdb;
+            font-weight: 500;
+            min-width: 110px;
+        }
+
+        .student-detail p span {
+            color: #ffffff;
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        .restart-btn {
+            background: #274f78;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #ffffff;
+            cursor: pointer;
+            transition: 0.15s;
+            box-shadow: 0 8px 14px #0a1b2a;
+            width: 100%;
+            border: 1px solid #436c95;
+            letter-spacing: 0.5px;
+        }
+
+        .restart-btn:hover {
+            background: #3269a0;
+        }
+
+        .error-msg {
+            color: #ffb0b0;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            text-align: right;
+            padding-right: 12px;
+        }
+    </style>
+</head>
+<body>
+<div class="app-container" id="appContainer">
+    <!-- student info form -->
+    <div id="studentFormSection">
+        <h1>🐬 آزمون MySQL</h1>
+        <div class="subhead">۱۰ سوال · ۱۰ دقیقه</div>
+        <div class="student-card">
+            <div class="row">
+                <div class="field">
+                    <label>نام</label>
+                    <input type="text" id="firstName" placeholder="مثلاً علی" autocomplete="off">
+                </div>
+                <div class="field">
+                    <label>نام خانوادگی</label>
+                    <input type="text" id="lastName" placeholder="مثلاً رضایی" autocomplete="off">
+                </div>
+            </div>
+            <div class="row">
+                <div class="field">
+                    <label>شماره دانشجویی</label>
+                    <input type="text" id="studentNumber" placeholder="مثلاً ۲۰۲۴۰۰۱۲" autocomplete="off">
+                </div>
+            </div>
+        </div>
+        <button class="btn btn-primary" id="startExamBtn" style="width:100%; padding: 18px;">▶ شروع آزمون</button>
+        <div id="formError" class="error-msg"></div>
+    </div>
+
+    <!-- quiz section -->
+    <div id="quizSection" class="hidden">
+        <div class="info-bar">
+            <div class="timer-box" id="timerDisplay">۱۰:۰۰</div>
+            <div class="progress-text" id="progressText">۱ / ۱۰</div>
+        </div>
+        <div class="question-box">
+            <div class="question-text" id="questionText"></div>
+            <div class="options" id="optionsContainer"></div>
+        </div>
+        <div class="nav-buttons">
+            <button class="btn" id="prevBtn" disabled>→ قبلی</button>
+            <button class="btn btn-success" id="nextBtn">بعدی ←</button>
+        </div>
+        <button class="btn btn-primary" id="submitExamBtn" style="margin-top: 12px; background: #226688;">📋 ارسال آزمون</button>
+    </div>
+
+    <!-- result section -->
+    <div id="resultSection" class="hidden">
+        <div class="result-card">
+            <h2>📊 نتیجه شما</h2>
+            <div class="result-mark" id="markDisplay">۰<span style="font-size:1.8rem;">/۱۰</span></div>
+            <div class="student-detail" id="studentDetailCard">
+                <!-- filled dynamically -->
+            </div>
+            <button class="restart-btn" id="restartBtn">⟳ بازگشت</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ---------- Persian number helper ----------
+        function toPersianNum(num) {
+            const persianDigits = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+            return num.toString().replace(/\d/g, d => persianDigits[d]);
+        }
+
+        // ---------- 40 MySQL questions in Persian ----------
+        const QUESTIONS_BANK = [
+            {
+                text: "کدام دستور SQL برای بازیابی داده‌ها از پایگاه داده MySQL استفاده می‌شود؟",
+                options: ["SELECT", "INSERT", "UPDATE", "DELETE"],
+                correct: "SELECT"
+            },
+            {
+                text: "عبارت WHERE در MySQL چه کاری انجام می‌دهد؟",
+                options: [
+                    "سطرها را قبل از گروه‌بندی فیلتر می‌کند",
+                    "مجموعه نتایج را مرتب می‌کند",
+                    "سطرهای با مقادیر یکسان را گروه‌بندی می‌کند",
+                    "دو جدول را به هم متصل می‌کند"
+                ],
+                correct: "سطرها را قبل از گروه‌بندی فیلتر می‌کند"
+            },
+            {
+                text: "کدام تابع تعداد سطرهای یک جدول را برمی‌گرداند؟",
+                options: ["COUNT()", "SUM()", "AVG()", "MAX()"],
+                correct: "COUNT()"
+            },
+            {
+                text: "پورت پیش‌فرض MySQL چیست؟",
+                options: ["3306", "5432", "1521", "27017"],
+                correct: "3306"
+            },
+            {
+                text: "کدام کلمه کلیدی سطرهای تکراری را در پرس‌وجوی SELECT حذف می‌کند؟",
+                options: ["DISTINCT", "UNIQUE", "GROUP BY", "HAVING"],
+                correct: "DISTINCT"
+            },
+            {
+                text: "کدام نوع JOIN همه سطرهای جدول چپ و سطرهای منطبق جدول راست را برمی‌گرداند؟",
+                options: ["LEFT JOIN", "INNER JOIN", "RIGHT JOIN", "FULL JOIN"],
+                correct: "LEFT JOIN"
+            },
+            {
+                text: "کدام دستور یک پایگاه داده جدید در MySQL ایجاد می‌کند؟",
+                options: [
+                    "CREATE DATABASE db_name;",
+                    "NEW DATABASE db_name;",
+                    "ADD DATABASE db_name;",
+                    "MAKE DATABASE db_name;"
+                ],
+                correct: "CREATE DATABASE db_name;"
+            },
+            {
+                text: "عملگر LIKE چه کاری انجام می‌دهد؟",
+                options: [
+                    "الگویی در یک ستون جستجو می‌کند",
+                    "دو مقدار را از نظر برابری مقایسه می‌کند",
+                    "مقادیر NULL را بررسی می‌کند",
+                    "جمع حسابی انجام می‌دهد"
+                ],
+                correct: "الگویی در یک ستون جستجو می‌کند"
+            },
+            {
+                text: "کدام دستور برای افزودن یک سطر جدید به جدول استفاده می‌شود؟",
+                options: ["INSERT INTO", "UPDATE", "ALTER TABLE", "ADD ROW"],
+                correct: "INSERT INTO"
+            },
+            {
+                text: "هدف از محدودیت PRIMARY KEY چیست؟",
+                options: [
+                    "هر سطر را به‌طور یکتا شناسایی می‌کند",
+                    "مقادیر NULL را مجاز می‌کند",
+                    "یک کلید خارجی ایجاد می‌کند",
+                    "مقادیر را به‌طور خودکار افزایش می‌دهد"
+                ],
+                correct: "هر سطر را به‌طور یکتا شناسایی می‌کند"
+            },
+            {
+                text: "کدام دستور برای به‌روزرسانی داده‌های موجود در یک جدول استفاده می‌شود؟",
+                options: ["UPDATE", "SELECT", "INSERT", "DELETE"],
+                correct: "UPDATE"
+            },
+            {
+                text: "کدام دستور برای حذف سطرها از یک جدول استفاده می‌شود؟",
+                options: ["DELETE", "REMOVE", "DROP", "TRUNCATE"],
+                correct: "DELETE"
+            },
+            {
+                text: "کدام تابع مجموع مقادیر یک ستون را برمی‌گرداند؟",
+                options: ["SUM()", "COUNT()", "AVG()", "MAX()"],
+                correct: "SUM()"
+            },
+            {
+                text: "کدام تابع میانگین مقادیر یک ستون را برمی‌گرداند؟",
+                options: ["AVG()", "SUM()", "COUNT()", "MIN()"],
+                correct: "AVG()"
+            },
+            {
+                text: "کدام تابع بزرگ‌ترین مقدار یک ستون را برمی‌گرداند؟",
+                options: ["MAX()", "MIN()", "SUM()", "AVG()"],
+                correct: "MAX()"
+            },
+            {
+                text: "کدام تابع کوچک‌ترین مقدار یک ستون را برمی‌گرداند؟",
+                options: ["MIN()", "MAX()", "AVG()", "COUNT()"],
+                correct: "MIN()"
+            },
+            {
+                text: "کدام عبارت برای مرتب‌سازی نتایج در MySQL استفاده می‌شود؟",
+                options: ["ORDER BY", "SORT BY", "GROUP BY", "ARRANGE BY"],
+                correct: "ORDER BY"
+            },
+            {
+                text: "کدام عبارت برای گروه‌بندی سطرها با مقادیر یکسان استفاده می‌شود؟",
+                options: ["GROUP BY", "ORDER BY", "HAVING", "WHERE"],
+                correct: "GROUP BY"
+            },
+            {
+                text: "کدام عبارت شرطی برای گروه‌ها (پس از GROUP BY) استفاده می‌شود؟",
+                options: ["HAVING", "WHERE", "FILTER", "CONDITION"],
+                correct: "HAVING"
+            },
+            {
+                text: "کدام نوع داده برای ذخیره متن با طول متغیر تا ۲۵۵ کاراکتر استفاده می‌شود؟",
+                options: ["VARCHAR", "CHAR", "TEXT", "INT"],
+                correct: "VARCHAR"
+            },
+            {
+                text: "کدام نوع داده برای ذخیره اعداد صحیح استفاده می‌شود؟",
+                options: ["INT", "VARCHAR", "DATE", "TEXT"],
+                correct: "INT"
+            },
+            {
+                text: "کدام نوع داده برای ذخیره تاریخ استفاده می‌شود؟",
+                options: ["DATE", "VARCHAR", "INT", "TIME"],
+                correct: "DATE"
+            },
+            {
+                text: "کدام دستور برای حذف یک جدول از پایگاه داده استفاده می‌شود؟",
+                options: ["DROP TABLE", "DELETE TABLE", "REMOVE TABLE", "TRUNCATE TABLE"],
+                correct: "DROP TABLE"
+            },
+            {
+                text: "کدام دستور برای افزودن یک ستون جدید به جدول موجود استفاده می‌شود؟",
+                options: ["ALTER TABLE ... ADD", "UPDATE TABLE ... ADD", "INSERT TABLE ... ADD", "MODIFY TABLE ... ADD"],
+                correct: "ALTER TABLE ... ADD"
+            },
+            {
+                text: "کلید خارجی (FOREIGN KEY) چه کاری انجام می‌دهد؟",
+                options: [
+                    "ارتباط بین دو جدول را ایجاد می‌کند",
+                    "یکتا بودن سطرها را تضمین می‌کند",
+                    "مقادیر NULL را مجاز می‌کند",
+                    "ایندکس ایجاد می‌کند"
+                ],
+                correct: "ارتباط بین دو جدول را ایجاد می‌کند"
+            },
+            {
+                text: "کدام دستور برای ایجاد یک ایندکس در MySQL استفاده می‌شود؟",
+                options: ["CREATE INDEX", "ADD INDEX", "MAKE INDEX", "NEW INDEX"],
+                correct: "CREATE INDEX"
+            },
+            {
+                text: "تابع NOW() در MySQL چه چیزی برمی‌گرداند؟",
+                options: [
+                    "تاریخ و زمان فعلی",
+                    "تاریخ فعلی",
+                    "زمان فعلی",
+                    "تاریخ و زمان سیستم‌عامل"
+                ],
+                correct: "تاریخ و زمان فعلی"
+            },
+            {
+                text: "کدام عملگر برای مقایسه با NULL استفاده می‌شود؟",
+                options: ["IS NULL", "= NULL", "== NULL", "EQ NULL"],
+                correct: "IS NULL"
+            },
+            {
+                text: "کدام دستور برای ایجاد یک جدول جدید استفاده می‌شود؟",
+                options: ["CREATE TABLE", "NEW TABLE", "MAKE TABLE", "ADD TABLE"],
+                correct: "CREATE TABLE"
+            },
+            {
+                text: "کدام عبارت برای محدود کردن تعداد سطرهای برگشتی استفاده می‌شود؟",
+                options: ["LIMIT", "TOP", "ROWNUM", "FETCH"],
+                correct: "LIMIT"
+            },
+            {
+                text: "تابع CONCAT() چه کاری انجام می‌دهد؟",
+                options: [
+                    "دو یا چند رشته را به هم متصل می‌کند",
+                    "دو عدد را جمع می‌کند",
+                    "طول رشته را برمی‌گرداند",
+                    "رشته را به عدد تبدیل می‌کند"
+                ],
+                correct: "دو یا چند رشته را به هم متصل می‌کند"
+            },
+            {
+                text: "تابع LENGTH() چه چیزی را برمی‌گرداند؟",
+                options: [
+                    "طول یک رشته",
+                    "تعداد کاراکترها",
+                    "تعداد بایت‌ها",
+                    "هر دو مورد الف و ب"
+                ],
+                correct: "طول یک رشته"
+            },
+            {
+                text: "کدام دستور برای درج چند سطر همزمان استفاده می‌شود؟",
+                options: [
+                    "INSERT INTO ... VALUES (...), (...);",
+                    "INSERT INTO ... MULTI VALUES;",
+                    "INSERT MULTIPLE INTO;",
+                    "MULTI INSERT INTO;"
+                ],
+                correct: "INSERT INTO ... VALUES (...), (...);"
+            },
+            {
+                text: "کدام کلیدواژه برای حذف تمام سطرهای یک جدول بدون حذف ساختار آن استفاده می‌شود؟",
+                options: ["TRUNCATE TABLE", "DELETE FROM", "DROP TABLE", "REMOVE ALL"],
+                correct: "TRUNCATE TABLE"
+            },
+            {
+                text: "تابع ROUND() چه کاری انجام می‌دهد؟",
+                options: [
+                    "عدد را به تعداد معین اعشار گرد می‌کند",
+                    "عدد را به بالا گرد می‌کند",
+                    "عدد را به پایین گرد می‌کند",
+                    "قدر مطلق عدد را برمی‌گرداند"
+                ],
+                correct: "عدد را به تعداد معین اعشار گرد می‌کند"
+            },
+            {
+                text: "کدام عبارت برای ترکیب نتایج دو پرس‌وجو استفاده می‌شود؟",
+                options: ["UNION", "JOIN", "MERGE", "COMBINE"],
+                correct: "UNION"
+            },
+            {
+                text: "کدام نوع JOIN فقط سطرهای منطبق در هر دو جدول را برمی‌گرداند؟",
+                options: ["INNER JOIN", "LEFT JOIN", "RIGHT JOIN", "FULL JOIN"],
+                correct: "INNER JOIN"
+            },
+            {
+                text: "کدام دستور برای ایجاد یک کاربر جدید در MySQL استفاده می‌شود؟",
+                options: ["CREATE USER", "ADD USER", "NEW USER", "INSERT USER"],
+                correct: "CREATE USER"
+            },
+            {
+                text: "کدام دستور برای اعطای دسترسی‌ها به یک کاربر استفاده می‌شود؟",
+                options: ["GRANT", "REVOKE", "ALLOW", "PERMIT"],
+                correct: "GRANT"
+            },
+            {
+                text: "تابع UPPER() چه کاری انجام می‌دهد؟",
+                options: [
+                    "رشته را به حروف بزرگ تبدیل می‌کند",
+                    "رشته را به حروف کوچک تبدیل می‌کند",
+                    "طول رشته را برمی‌گرداند",
+                    "رشته را معکوس می‌کند"
+                ],
+                correct: "رشته را به حروف بزرگ تبدیل می‌کند"
+            }
+        ];
+
+        // ---------- state ----------
+        let student = { firstName: "", lastName: "", studentNumber: "" };
+        let currentQuestions = [];
+        let userAnswers = new Array(10).fill(null);
+        let currentIndex = 0;
+        let timerInterval = null;
+        let timeLeft = 600;
+        let examActive = false;
+        let examSubmitted = false;
+
+        // DOM elements
+        const studentFormSection = document.getElementById('studentFormSection');
+        const quizSection = document.getElementById('quizSection');
+        const resultSection = document.getElementById('resultSection');
+        const firstNameInput = document.getElementById('firstName');
+        const lastNameInput = document.getElementById('lastName');
+        const studentNumberInput = document.getElementById('studentNumber');
+        const startExamBtn = document.getElementById('startExamBtn');
+        const formError = document.getElementById('formError');
+
+        const timerDisplay = document.getElementById('timerDisplay');
+        const progressText = document.getElementById('progressText');
+        const questionText = document.getElementById('questionText');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitExamBtn = document.getElementById('submitExamBtn');
+
+        const markDisplay = document.getElementById('markDisplay');
+        const studentDetailCard = document.getElementById('studentDetailCard');
+        const restartBtn = document.getElementById('restartBtn');
+
+        // ---------- helpers ----------
+        function shuffleArray(arr) {
+            const a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        // Pick 10 random unique questions from the 40-question bank
+        function pickRandomQuestions() {
+            const shuffledBank = shuffleArray(QUESTIONS_BANK);
+            const selected = shuffledBank.slice(0, 10);
+            return selected.map(q => ({
+                text: q.text,
+                options: shuffleArray(q.options),
+                correct: q.correct
+            }));
+        }
+
+        function formatTime(sec) {
+            const m = Math.floor(sec / 60);
+            const s = sec % 60;
+            return `${toPersianNum(m.toString().padStart(2, '0'))}:${toPersianNum(s.toString().padStart(2, '0'))}`;
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function startTimer() {
+            stopTimer();
+            timerInterval = setInterval(() => {
+                if (!examActive || examSubmitted) return;
+                timeLeft -= 1;
+                timerDisplay.textContent = formatTime(timeLeft);
+                if (timeLeft <= 0) {
+                    timeLeft = 0;
+                    timerDisplay.textContent = '۰۰:۰۰';
+                    if (examActive && !examSubmitted) {
+                        autoSubmitExam();
+                    }
+                }
+            }, 1000);
+        }
+
+        function autoSubmitExam() {
+            if (!examActive || examSubmitted) return;
+            examSubmitted = true;
+            examActive = false;
+            stopTimer();
+            finishAndShowResult(true);
+        }
+
+        function finishAndShowResult(fromTimeout = false) {
+            if (!examActive && !fromTimeout) return;
+            examSubmitted = true;
+            examActive = false;
+            stopTimer();
+
+            let correctCount = 0;
+            currentQuestions.forEach((q, idx) => {
+                const userAns = userAnswers[idx];
+                if (userAns && userAns === q.correct) {
+                    correctCount++;
+                }
+            });
+
+            quizSection.classList.add('hidden');
+            resultSection.classList.remove('hidden');
+
+            markDisplay.innerHTML = `${toPersianNum(correctCount)}<span style="font-size:1.8rem;">/${toPersianNum(10)}</span>`;
+
+            studentDetailCard.innerHTML = `
+                <p><strong>نام:</strong> <span>${escapeHtml(student.firstName)}</span></p>
+                <p><strong>نام خانوادگی:</strong> <span>${escapeHtml(student.lastName)}</span></p>
+                <p><strong>شماره دانشجویی:</strong> <span>${escapeHtml(student.studentNumber)}</span></p>
+                <p><strong>نمره:</strong> <span>${toPersianNum(correctCount)} / ${toPersianNum(10)}</span></p>
+                ${fromTimeout ? '<p style="color:#ffb86b; margin-top:10px;">⏰ زمان تمام شد — آزمون به‌طور خودکار ارسال شد</p>' : ''}
+            `;
+        }
+
+        function escapeHtml(unsafe) {
+            if (!unsafe) return '';
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // render current question
+        function renderQuestion() {
+            if (!currentQuestions.length) return;
+            const q = currentQuestions[currentIndex];
+            questionText.textContent = q.text;
+
+            progressText.textContent = `${toPersianNum(currentIndex + 1)} / ${toPersianNum(currentQuestions.length)}`;
+
+            optionsContainer.innerHTML = '';
+            q.options.forEach((opt, optIdx) => {
+                const isSelected = (userAnswers[currentIndex] === opt);
+                const optionDiv = document.createElement('div');
+                optionDiv.className = `option ${isSelected ? 'selected' : ''}`;
+                optionDiv.dataset.optionValue = opt;
+
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = 'questionOption';
+                radio.value = opt;
+                radio.id = `opt_${currentIndex}_${optIdx}`;
+                radio.checked = isSelected;
+
+                const label = document.createElement('label');
+                label.htmlFor = `opt_${currentIndex}_${optIdx}`;
+                label.textContent = opt;
+
+                optionDiv.appendChild(radio);
+                optionDiv.appendChild(label);
+
+                optionDiv.addEventListener('click', (e) => {
+                    if (e.target.tagName === 'INPUT') return;
+                    selectOption(opt);
+                });
+
+                radio.addEventListener('change', () => {
+                    selectOption(opt);
+                });
+
+                optionsContainer.appendChild(optionDiv);
+            });
+
+            prevBtn.disabled = (currentIndex === 0);
+            if (currentIndex === currentQuestions.length - 1) {
+                nextBtn.textContent = 'پایان';
+            } else {
+                nextBtn.textContent = 'بعدی ←';
+            }
+        }
+
+        function selectOption(optValue) {
+            if (!examActive || examSubmitted) return;
+            userAnswers[currentIndex] = optValue;
+            renderQuestion();
+        }
+
+        function goPrev() {
+            if (!examActive || examSubmitted) return;
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderQuestion();
+            }
+        }
+
+        function goNext() {
+            if (!examActive || examSubmitted) return;
+            if (currentIndex < currentQuestions.length - 1) {
+                currentIndex++;
+                renderQuestion();
+            } else {
+                if (examActive && !examSubmitted) {
+                    finishAndShowResult(false);
+                }
+            }
+        }
+
+        function resetExam() {
+            stopTimer();
+            examActive = false;
+            examSubmitted = false;
+            timeLeft = 600;
+            timerDisplay.textContent = formatTime(timeLeft);
+            userAnswers = new Array(10).fill(null);
+            currentIndex = 0;
+            currentQuestions = pickRandomQuestions();
+
+            studentFormSection.classList.add('hidden');
+            resultSection.classList.add('hidden');
+            quizSection.classList.remove('hidden');
+
+            examActive = true;
+            examSubmitted = false;
+            renderQuestion();
+            startTimer();
+        }
+
+        function validateForm() {
+            const fname = firstNameInput.value.trim();
+            const lname = lastNameInput.value.trim();
+            const snum = studentNumberInput.value.trim();
+            if (!fname || !lname || !snum) {
+                formError.textContent = '❌ لطفاً همه فیلدها را پر کنید.';
+                return false;
+            }
+            formError.textContent = '';
+            student = { firstName: fname, lastName: lname, studentNumber: snum };
+            return true;
+        }
+
+        // ---------- event listeners ----------
+        startExamBtn.addEventListener('click', () => {
+            if (!validateForm()) return;
+            resetExam();
+        });
+
+        prevBtn.addEventListener('click', goPrev);
+        nextBtn.addEventListener('click', goNext);
+
+        submitExamBtn.addEventListener('click', () => {
+            if (!examActive || examSubmitted) return;
+            finishAndShowResult(false);
+        });
+
+        restartBtn.addEventListener('click', () => {
+            stopTimer();
+            examActive = false;
+            examSubmitted = false;
+            quizSection.classList.add('hidden');
+            resultSection.classList.add('hidden');
+            studentFormSection.classList.remove('hidden');
+            formError.textContent = '';
+            timeLeft = 600;
+            timerDisplay.textContent = formatTime(timeLeft);
+        });
+
+        // initialize
+        studentFormSection.classList.remove('hidden');
+        quizSection.classList.add('hidden');
+        resultSection.classList.add('hidden');
+        timerDisplay.textContent = formatTime(600);
+
+        window.addEventListener('beforeunload', () => {
+            if (timerInterval) clearInterval(timerInterval);
+        });
+    })();
+</script>
+</body>
+</html>
